@@ -6,10 +6,10 @@ Pizza list page:
 GET /products : Get all products  
 POST /products : Create new product
 
-Pizza detail page:
+Pizza detail page:  
 GET /products/{id} : Get product detail by id  
 GET /products/{id}/rates : Get all rate of product by id  
-Customer rates pizza:
+Customer rates pizza:  
 POST /products/{id}/rates : Create new rate for product with product id
 
 Login page:

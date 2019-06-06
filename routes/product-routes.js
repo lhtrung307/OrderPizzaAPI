@@ -1,5 +1,7 @@
 const Joi = require("joi");
 
+const productController = require("../controllers/product-controller");
+
 const Router = {
   name: "product-router",
   version: "1.0.0",
@@ -11,7 +13,7 @@ const Router = {
         description: "Get list of products",
         tags: ["api", "order-pizza", "product"]
       },
-      handler: () => {}
+      handler: productController.list
     });
     server.route({
       method: "GET",
@@ -20,7 +22,9 @@ const Router = {
         description: "Get product detail by id",
         tags: ["api", "order-pizza", "product"]
       },
-      handler: () => {}
+      handler: productController.detail
     });
   }
 };
+
+module.exports = Router;
