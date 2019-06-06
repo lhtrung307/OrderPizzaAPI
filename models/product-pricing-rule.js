@@ -12,7 +12,7 @@ const ProductPricingRuleSchema = new Schema({
     }
   ],
   amount: {
-    type: BigInt,
+    type: Number,
     required: "Product Pricing Rule must have amount to apply"
   },
   discountType: {

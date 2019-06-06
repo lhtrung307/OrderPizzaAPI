@@ -23,15 +23,15 @@ const OrderDetailSchema = new Schema({
     required: "Order detail must have quantity"
   },
   price: {
-    type: BigInt,
+    type: Number,
     required: "Order detail must have price"
   },
   total: {
-    type: BigInt,
+    type: Number,
     required: "Order detail must have total"
   },
   discountAmount: {
-    type: BigInt,
+    type: Number,
     required: "Order detail must have discount amount"
   }
 });

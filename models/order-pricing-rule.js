@@ -6,7 +6,7 @@ const OrderPricingRuleSchema = new Schema({
   fromDate: Date,
   toDate: Date,
   amount: {
-    type: BigInt,
+    type: Number,
     required: "Order Pricing Rule must have amount to apply"
   },
   discountType: {

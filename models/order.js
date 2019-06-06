@@ -18,7 +18,7 @@ const OrderSchema = new Schema({
     default: Date.now()
   },
   total: {
-    type: BigInt,
+    type: Number,
     required: "Must have total"
   }
 });

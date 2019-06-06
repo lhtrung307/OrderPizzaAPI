@@ -26,7 +26,7 @@ const ProductSchema = new Schema({
     required: "Product must have name"
   },
   description: String,
-  price: BigInt,
+  price: Number,
   variantProducts: [
     {
       key: {
@@ -40,7 +40,7 @@ const ProductSchema = new Schema({
         required: "Variant product must have value"
       },
       price: {
-        type: BigInt,
+        type: Number,
         required: "Variant product must have price"
       }
     }
