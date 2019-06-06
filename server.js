@@ -4,12 +4,16 @@ const Inert = require("inert");
 const Vision = require("vision");
 const Pack = require("./package.json");
 
+const productRouter = require("./routes/product-routes");
 const server = Hapi.server({
   port: 3000,
   host: "localhost"
 });
 
 exports.start = async () => {
+  await server.register({
+    plugin: productRouter
+  });
   await server.register([
     Inert,
     Vision,
