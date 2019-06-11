@@ -8,7 +8,7 @@ POST /products : Create new product
 
 Pizza detail page:  
 GET /products/{id} : Get product detail by id  
-GET /products/{id}/rates : Get all rate of product by id  
+GET /products/{id}/rates : Get all rates of product by id  
 Customer rates pizza:  
 POST /products/{id}/rates : Create new rate for product with product id
 

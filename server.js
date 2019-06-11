@@ -10,10 +10,15 @@ const server = Hapi.server({
   host: "localhost"
 });
 
-exports.start = async () => {
+exports.init = async () => {
   await server.register({
     plugin: productRouter
   });
+  return server;
+};
+
+exports.start = async () => {
+  await exports.init();
   await server.register([
     Inert,
     Vision,
