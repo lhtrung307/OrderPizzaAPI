@@ -13,7 +13,7 @@ class OrderServices {
       resetTimeout: 30000
     };
     this.links = [];
-    this.links.listPizzas = "http://0.0.0.0:3000/pizzas";
+    this.links.listPizzas = "https://pizza-products.herokuapp.com/pizzas";
   }
 
   async createOrder(order) {
