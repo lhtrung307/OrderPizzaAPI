@@ -28,12 +28,13 @@ module.exports.login = async (request, h) => {
   };
   let customer;
   try {
-    customer = CustomerServices.authCustomer(loginData);
+    customer = await CustomerServices.authCustomer(loginData);
   } catch (error) {
     return h.response(error.message);
   }
   if (customer) {
-    return h.response("Login success");
+    delete customer.password;
+    return h.response(customer);
   } else {
     return h.response("Login failed");
   }

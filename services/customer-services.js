@@ -30,6 +30,7 @@ class CustomerServices {
     let customerRecord;
     try {
       customerRecord = await Customer.getByEmail(customer.email);
+      console.log(customerRecord);
     } catch (error) {
       throw error;
     }
@@ -54,7 +55,9 @@ class CustomerServices {
       email: Joi.string()
         .email()
         .required(),
-      phone: Joi.string().required(),
+      phone: Joi.string()
+        .regex(/^[0-9]+$/, "numbers")
+        .required(),
       name: Joi.string().required(),
       password: Joi.string().required(),
       dob: Joi.date().required()

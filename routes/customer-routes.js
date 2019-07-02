@@ -14,12 +14,20 @@ const Router = {
             email: Joi.string()
               .email()
               .required(),
-            phone: Joi.string().required(),
+            phone: Joi.string()
+              .regex(/^[0-9]+$/, "phone numbers")
+              .required(),
             name: Joi.string().required(),
             password: Joi.string().required(),
             dob: Joi.date().required()
           }),
           failAction: (request, h, error) => {
+            if (
+              error.isJoi &&
+              error.details[0].message.includes("phone numbers")
+            ) {
+              return h.response("Phone cannot contains characters").takeover();
+            }
             return error.isJoi
               ? h.response(error.details[0]).takeover()
               : h.response(error).takeover();
