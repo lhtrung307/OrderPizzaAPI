@@ -33,7 +33,8 @@ module.exports.login = async (request, h) => {
     return h.response(error.message);
   }
   if (customer) {
-    delete customer.password;
+    customer.password = undefined;
+    console.log(customer);
     return h.response(customer);
   } else {
     return h.response("Login failed");
