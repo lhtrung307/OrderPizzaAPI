@@ -61,8 +61,6 @@ const getByOrderID = (orderID) =>
       return { error };
     });
 
-const getByProductIDs = (productIDs) => {};
-
 module.exports = {
   OrderDetailSchema,
   OrderDetailModel,

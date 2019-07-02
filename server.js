@@ -9,7 +9,10 @@ const customerRouter = require("./routes/customer-routes");
 const port = process.env.PORT || 3001;
 const server = Hapi.server({
   port,
-  host: "0.0.0.0"
+  host: "0.0.0.0",
+  routes: {
+    cors: true
+  }
 });
 
 exports.init = async () => {

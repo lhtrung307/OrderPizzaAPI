@@ -1,50 +1,41 @@
-const kafka = require("kafka-node");
+let Kafka = require("node-rdkafka");
 require("dotenv").config();
 
-try {
-  const Producer = kafka.Producer;
-  const client = new kafka.KafkaClient(config.CLOUDKARAFKA_BROKERS, {
-    mechanism: "SASL",
-    username: config.CLOUDKARAFKA_USERNAME,
-    password: config.CLOUDKARAFKA_PASSWORD
-  });
-  const producer = new Producer(client);
-  const kafka_topic = config.kafka_topic;
-  console.log(kafka_topic);
-  let payloads = [
-    {
-      topic: kafka_topic,
-      messages: "Message sending to topic: " + config.kafka_topic
-    }
-  ];
+let kafkaConf = {
+  "group.id": "cloudkarafka-pricingrules",
+  "metadata.broker.list": process.env.CLOUDKARAFKA_BROKERS.split(","),
+  "socket.keepalive.enable": true,
+  "security.protocol": "SASL_SSL",
+  "sasl.mechanisms": "SCRAM-SHA-256",
+  "sasl.username": process.env.CLOUDKARAFKA_USERNAME,
+  "sasl.password": process.env.CLOUDKARAFKA_PASSWORD,
+  debug: "generic,broker,security"
+};
 
-  producer.on("ready", async function() {
-    let push_status = producer.send(payloads, (err, data) => {
-      if (err) {
-        console.log(
-          "[kafka-producer -> " + kafka_topic + "]: broker update failed"
-        );
-      } else {
-        console.log(
-          "[kafka-producer -> " + kafka_topic + "]: broker update success"
-        );
-      }
-    });
-  });
+const prefix = process.env.CLOUDKARAFKA_TOPIC_PREFIX;
+const topic = `${prefix}updatePricingRule`;
+const producer = new Kafka.Producer(kafkaConf);
+const maxMessages = 20;
 
-  producer.on("error", function(err) {
-    console.log(err);
-    console.log("[kafka-producer -> " + kafka_topic + "]: connection errored");
-    throw err;
-  });
+const genMessage = (i) => new Buffer(`Kafka example, message number ${i}`);
 
-  let result = producer.send(payloads, (err, data) => {
-    if (err) {
-      console.log("error:", err);
-    } else {
-      console.log("data:", data);
-    }
-  });
-} catch (e) {
-  console.log(e);
-}
+producer.on("ready", function(arg) {
+  console.log(`producer ${arg.name} ready.`);
+  for (var i = 0; i < maxMessages; i++) {
+    producer.produce(topic, -1, genMessage(i), i);
+  }
+  setTimeout(() => producer.disconnect(), 0);
+});
+
+producer.on("disconnected", function(arg) {
+  process.exit();
+});
+
+producer.on("event.error", function(err) {
+  console.error(err);
+  process.exit(1);
+});
+producer.on("event.log", function(log) {
+  console.log(log);
+});
+producer.connect();

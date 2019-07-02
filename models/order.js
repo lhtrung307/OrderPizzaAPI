@@ -29,8 +29,12 @@ const OrderModel = Mongooose.model("order", OrderSchema);
 
 const save = (order) => OrderModel.create(order);
 
+const getByDate = (date) =>
+  OrderModel.aggregate({ $match: { date: { $gt: date } } });
+
 module.exports = {
   OrderSchema,
   OrderModel,
-  save
+  save,
+  getByDate
 };

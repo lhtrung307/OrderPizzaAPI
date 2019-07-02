@@ -133,6 +133,10 @@ class OrderServices {
     }
   }
 
+  async getOrderByDate(date) {
+    let result = await Orders.getByDate(date);
+  }
+
   orderValidate() {
     return Joi.object().keys({
       customerID: Joi.string().required(),

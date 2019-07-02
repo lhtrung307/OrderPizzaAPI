@@ -24,9 +24,9 @@
     "hapi-swagger": "^10.0.2",
     "inert": "^5.1.3",
     "mongoose": "^5.6.0",
+    "node-rdkafka": "^2.5.1",
     "opossum": "^2.2.0",
-    "vision": "^5.4.4",
-    "node-rdkafka": "^2.2.0"
+    "vision": "^5.4.4"
   },
   "devDependencies": {
     "jest": "^24.8.0",
