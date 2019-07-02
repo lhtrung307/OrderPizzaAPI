@@ -4,16 +4,23 @@ const Inert = require("inert");
 const Vision = require("vision");
 const Pack = require("./package.json");
 
-const productRouter = require("./routes/product-routes");
+const orderRouter = require("./routes/order-routes");
+const customerRouter = require("./routes/customer-routes");
+const port = process.env.PORT || 3001;
 const server = Hapi.server({
-  port: 3000,
-  host: "localhost"
+  port,
+  host: "0.0.0.0"
 });
 
 exports.init = async () => {
-  await server.register({
-    plugin: productRouter
-  });
+  await server.register([
+    {
+      plugin: orderRouter
+    },
+    {
+      plugin: customerRouter
+    }
+  ]);
   return server;
 };
 
@@ -26,7 +33,7 @@ exports.start = async () => {
       plugin: HapiSwagger,
       options: {
         info: {
-          title: "Pizza Order API",
+          title: "Pizza Order Endpoints",
           version: Pack.version
         }
       }
