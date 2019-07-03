@@ -135,6 +135,7 @@ class OrderServices {
 
   async getOrderByDate(date) {
     let result = await Orders.getByDate(date);
+    return result;
   }
 
   orderValidate() {

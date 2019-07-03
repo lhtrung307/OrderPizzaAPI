@@ -30,7 +30,30 @@ const OrderModel = Mongooose.model("order", OrderSchema);
 const save = (order) => OrderModel.create(order);
 
 const getByDate = (date) =>
-  OrderModel.aggregate({ $match: { date: { $gt: date } } });
+  OrderModel.aggregate([
+    { $match: { date: { $gte: new Date(date) } } },
+    {
+      $lookup: {
+        from: "order-details",
+        localField: "_id",
+        foreignField: "orderID",
+        as: "orderDetails"
+      }
+    },
+    { $unwind: "$orderDetails" },
+    {
+      $group: {
+        _id: "$orderDetails.productID",
+        quantity: { $sum: "$orderDetails.quantity" }
+      }
+    }
+  ])
+    .sort({ quantity: -1 })
+    .limit(5)
+    .then((result) => result)
+    .catch((error) => {
+      return { error };
+    });
 
 module.exports = {
   OrderSchema,

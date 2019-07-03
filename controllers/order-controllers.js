@@ -14,4 +14,12 @@ module.exports.create = async (request, h) => {
   }
 };
 
-module.exports.getByDate = async (request, h) => {};
+module.exports.getByDate = async (request, h) => {
+  try {
+    let date = request.params.date;
+    let orders = await OrderServices.getOrderByDate(date);
+    return h.response(orders);
+  } catch (error) {
+    return h.response(error.message).code(500);
+  }
+};
