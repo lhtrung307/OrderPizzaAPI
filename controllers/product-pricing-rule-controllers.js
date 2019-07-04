@@ -79,7 +79,7 @@ module.exports.create = async (request, h) => {
       producer.connect();
       producer.on("ready", function(arg) {
         console.log(`producer ${arg.name} ready.`);
-        producer.produce(topic, -1, genMessage(pricingRule), "key");
+        producer.produce(topic, -1, genMessage(pricingRule), "create");
         setTimeout(() => producer.disconnect(), 0);
       });   
       console.log("hello")   

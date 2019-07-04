@@ -44,12 +44,11 @@ const getByDate = (date) =>
     {
       $group: {
         _id: "$orderDetails.productID",
-        quantity: { $sum: "$orderDetails.quantity" },
-        type: "pizza"
+        quantity: { $sum: "$orderDetails.quantity" }
       }
     }
   ])
-    .sort({ quantity: -1 })
+    .sort({ type: -1, quantity: -1 })
     .limit(5)
     .then((result) => result)
     .catch((error) => {
