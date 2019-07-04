@@ -70,6 +70,7 @@ class OrderServices {
           orderDetails[i].total = this.calculateOrderDetailTotal(
             orderDetails[i]
           );
+          orderDetails[i].type = products[j].type;
         }
       }
     }
@@ -97,6 +98,7 @@ class OrderServices {
         OrderDetails.save(orderDetail);
       });
     }
+    return savedOrder;
   }
 
   async getPricingRuleOfProduct(productID) {

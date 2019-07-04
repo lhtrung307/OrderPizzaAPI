@@ -33,6 +33,9 @@ const OrderDetailSchema = new Schema(
     discountAmount: {
       type: Number,
       required: "Order detail must have discount amount"
+    },
+    type: {
+      type: String
     }
   },
   { versionKey: false }

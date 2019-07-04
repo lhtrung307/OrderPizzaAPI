@@ -1,4 +1,5 @@
 const ProductPricingRuleServices = require("../services/product-pricing-rule-services");
+const Boom = require("@hapi/boom");
 
 module.exports.list = async (request, h) => {
   let query = request.query;
@@ -19,5 +20,20 @@ module.exports.list = async (request, h) => {
     }
   } catch (error) {
     return h.response(error.message).code(500);
+  }
+};
+
+module.exports.create = async (request, h) => {
+  let pricingRule = request.payload;
+  try {
+    let createdPricingRule = await ProductPricingRuleServices.createProductPricingRule(
+      pricingRule
+    );
+    if (createdPricingRule) {
+      return h.response(createdPricingRule);
+    }
+    return h.response("Cannot create pricing rule");
+  } catch (error) {
+    return Boom.badImplementation(error);
   }
 };

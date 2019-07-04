@@ -44,7 +44,8 @@ const getByDate = (date) =>
     {
       $group: {
         _id: "$orderDetails.productID",
-        quantity: { $sum: "$orderDetails.quantity" }
+        quantity: { $sum: "$orderDetails.quantity" },
+        type: "pizza"
       }
     }
   ])

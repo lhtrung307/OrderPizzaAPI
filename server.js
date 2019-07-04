@@ -6,6 +6,7 @@ const Pack = require("./package.json");
 
 const orderRouter = require("./routes/order-routes");
 const customerRouter = require("./routes/customer-routes");
+const productPricingRuleRouter = require("./routes/product-pricing-rule-routes");
 const port = process.env.PORT || 3001;
 const server = Hapi.server({
   port,
@@ -22,6 +23,9 @@ exports.init = async () => {
     },
     {
       plugin: customerRouter
+    },
+    {
+      plugin: productPricingRuleRouter
     }
   ]);
   return server;
