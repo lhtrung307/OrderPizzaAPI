@@ -21,9 +21,9 @@ const producer = new Kafka.Producer(kafkaConf);
 const maxMessages = 20;
 
 const genMessage = (pricingRule) => {
-  let message = JSON.stringify(pricingRule)
+  let message = JSON.stringify(pricingRule);
   return Buffer.from(message);
-}
+};
 
 // producer.on("ready", function(arg) {
 //   console.log(`producer ${arg.name} ready.`);
@@ -34,7 +34,7 @@ const genMessage = (pricingRule) => {
 // });
 
 producer.on("disconnected", function(arg) {
-  console.log("Sent")
+  console.log("Sent", new Date());
 });
 
 producer.on("event.error", function(err) {
@@ -42,11 +42,9 @@ producer.on("event.error", function(err) {
   process.exit(1);
 });
 producer.on("event.log", function(log) {
-  console.log(log);
+  // console.log(log);
 });
-
-
-
+producer.connect();
 module.exports.list = async (request, h) => {
   let query = request.query;
   let sortType;
@@ -76,13 +74,15 @@ module.exports.create = async (request, h) => {
       pricingRule
     );
     if (createdPricingRule) {
-      producer.connect();
-      producer.on("ready", function(arg) {
-        console.log(`producer ${arg.name} ready.`);
-        producer.produce(topic, -1, genMessage(pricingRule), "create");
-        setTimeout(() => producer.disconnect(), 0);
-      });   
-      console.log("hello")   
+      // producer.on("ready", function(arg) {
+      //   console.log(`producer ${arg.name} ready.`);
+      producer.produce(topic, -1, genMessage(pricingRule), "create");
+      // setTimeout(() => {
+      //   console.log("disconect");
+      //   producer.disconnect();
+      // }, 0);
+      // });
+      console.log("hello");
       return h.response(createdPricingRule);
     }
     return h.response("Cannot create pricing rule");
