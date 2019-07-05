@@ -45,6 +45,7 @@ producer.on("event.log", function(log) {
   // console.log(log);
 });
 producer.connect();
+
 module.exports.list = async (request, h) => {
   let query = request.query;
   let sortType;
@@ -52,7 +53,7 @@ module.exports.list = async (request, h) => {
     sortType = query.sort;
   }
   try {
-    const productPricingRules = ProductPricingRuleServices.getAllProductPricingRules(
+    const productPricingRules = await ProductPricingRuleServices.getAllProductPricingRules(
       sortType
     );
     if (productPricingRules) {
@@ -86,6 +87,45 @@ module.exports.create = async (request, h) => {
       return h.response(createdPricingRule);
     }
     return h.response("Cannot create pricing rule");
+  } catch (error) {
+    return Boom.badImplementation(error);
+  }
+};
+
+module.exports.update = async (request, h) => {
+  let pricingRuleID = request.params.id;
+  let pricingRuleData = request.payload;
+  try {
+    let updatedPricingRule = ProductPricingRuleServices.updateProductPricingRule(
+      pricingRuleID,
+      pricingRuleData
+    );
+    if (updatedPricingRule) {
+      producer.produce(topic, -1, genMessage(updatedPricingRule), "update");
+      console.log("update");
+      return h.response(updatedPricingRule);
+    } else {
+      return h.response({ message: "Cannot update product pricing rule" });
+    }
+  } catch (error) {
+    return Boom.badImplementation(error);
+  }
+};
+
+module.exports.delete = async (request, h) => {
+  let pricingRuleID = request.params.id;
+  try {
+    let deletedPricingRule = await ProductPricingRuleServices.deleteProductPricingRule(
+      pricingRuleID
+    );
+    if (deletedPricingRule) {
+      console.log(deletedPricingRule);
+      producer.produce(topic, -1, genMessage(deletedPricingRule), "delete");
+      console.log("delete");
+      return h.response({ message: "Product Pricing Rule deleted" });
+    } else {
+      return h.response({ message: "Cannot delete product pricing rule" });
+    }
   } catch (error) {
     return Boom.badImplementation(error);
   }

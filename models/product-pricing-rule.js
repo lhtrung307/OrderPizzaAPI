@@ -53,10 +53,17 @@ const getByID = (productPricingRuleID) =>
 
 const updateByID = (productPricingRuleID, productPricingRule) =>
   ProductPricingRuleModel.findByIdAndUpdate(
-    productPricingRuleID,
+    { _id: productPricingRuleID },
     productPricingRule,
     { new: true }
   )
+    .then((productPricingRule) => productPricingRule)
+    .catch((error) => {
+      return { error };
+    });
+
+const deleteByID = (productPricingRuleID) =>
+  ProductPricingRuleModel.findByIdAndDelete({ _id: productPricingRuleID })
     .then((productPricingRule) => productPricingRule)
     .catch((error) => {
       return { error };
@@ -78,5 +85,6 @@ module.exports = {
   save,
   getByID,
   updateByID,
+  deleteByID,
   getUnexpiredPricingRules
 };

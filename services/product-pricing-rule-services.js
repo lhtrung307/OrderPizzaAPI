@@ -31,6 +31,42 @@ class ProductPricingRuleServices {
     }
     return null;
   }
+
+  async updateProductPricingRule(pricingRuleID, pricingRuleData) {
+    if (!pricingRuleID) {
+      throw new Error("pricingRuleID cannot be empty");
+    }
+    if (!pricingRuleData) {
+      throw new Error("Update data cannot be empty");
+    }
+    let updatedProductPricingRule = await ProductPricingRule.updateByID(
+      pricingRuleID,
+      pricingRuleData
+    );
+    if (updatedProductPricingRule) {
+      if (updatedProductPricingRule.error) {
+        throw updatedProductPricingRule.error;
+      }
+      return updatedProductPricingRule;
+    }
+    return null;
+  }
+
+  async deleteProductPricingRule(pricingRuleID) {
+    if (!pricingRuleID) {
+      throw new Error("pricingRuleId cannot be empty");
+    }
+    let deletedProductPricingRule = await ProductPricingRule.deleteByID(
+      pricingRuleID
+    );
+    if (deletedProductPricingRule) {
+      if (deletedProductPricingRule.error) {
+        throw deletedProductPricingRule.error;
+      }
+      return deletedProductPricingRule;
+    }
+    return null;
+  }
 }
 
 module.exports = new ProductPricingRuleServices();

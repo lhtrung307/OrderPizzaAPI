@@ -34,6 +34,53 @@ const Router = {
       },
       handler: ProductPricingRuleControllers.create
     });
+
+    server.route({
+      method: "PUT",
+      path: "/product-pricing-rules/{id}",
+      options: {
+        description: "Update product pricing rules by id",
+        tags: ["api", "order-pizza", "product-pricing-rules"],
+        validate: {
+          params: { id: Joi.string().required() },
+          payload: Joi.object().keys({
+            fromDate: Joi.date().optional(),
+            toDate: Joi.date().optional(),
+            productIDs: Joi.array()
+              .items(Joi.string())
+              .optional(),
+            discountType: Joi.string().optional(),
+            discount: Joi.number().optional()
+          }),
+          failAction: (request, h, error) => {
+            return error.isJoi
+              ? h.response(error.details[0]).takeover()
+              : h.response(error).takeover();
+          }
+        }
+      },
+      handler: ProductPricingRuleControllers.update
+    });
+
+    server.route({
+      method: "DELETE",
+      path: "/product-pricing-rules/{id}",
+      options: {
+        description: "Delete product pricing rules by id",
+        tags: ["api", "order-pizza", "product-pricing-rules"],
+        validate: {
+          params: {
+            id: Joi.string().required()
+          },
+          failAction: (request, h, error) => {
+            return error.isJoi
+              ? h.response(error.details[0]).takeover()
+              : h.response(error).takeover();
+          }
+        }
+      },
+      handler: ProductPricingRuleControllers.delete
+    });
   }
 };
 
