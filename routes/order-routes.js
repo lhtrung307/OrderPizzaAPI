@@ -29,7 +29,8 @@ const Router = {
                       value: Joi.string()
                     })
                   ),
-                  price: Joi.number().required()
+                  price: Joi.number().required(),
+                  type: Joi.string().required()
                 })
               )
           }),

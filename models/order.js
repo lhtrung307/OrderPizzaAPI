@@ -48,7 +48,7 @@ const getByDate = (date) =>
       }
     }
   ])
-    .sort({ type: -1, quantity: -1 })
+    .sort({ quantity: -1 })
     .limit(5)
     .then((result) => result)
     .catch((error) => {
