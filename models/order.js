@@ -41,6 +41,7 @@ const getByDate = (date) =>
       }
     },
     { $unwind: "$orderDetails" },
+    { $match: { "orderDetails.type": "pizza" } },
     {
       $group: {
         _id: "$orderDetails.productID",

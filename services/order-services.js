@@ -25,6 +25,7 @@ class OrderServices {
       throw result.error;
     }
     let orderDetails = order.orderDetails;
+    console.log(orderDetails);
     let productInfos = orderDetails.map((orderDetail) => ({
       productID: orderDetail.productID,
       variants: orderDetail.variants
@@ -43,7 +44,7 @@ class OrderServices {
       );
     });
     let requestResult = await breaker.fire();
-    console.log(requestResult);
+    console.log(requestResult.data);
     // bắt lỗi khi nhận dữ liệu từ axios
     let products = requestResult.data;
 
@@ -70,7 +71,6 @@ class OrderServices {
           orderDetails[i].total = this.calculateOrderDetailTotal(
             orderDetails[i]
           );
-          orderDetails[i].type = products[j].type;
         }
       }
     }
@@ -158,7 +158,8 @@ class OrderServices {
                 value: Joi.string()
               })
             ),
-            price: Joi.number().required()
+            price: Joi.number().required(),
+            type: Joi.string().required()
           })
         )
     });
