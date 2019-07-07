@@ -140,7 +140,7 @@ class OrderServices {
       throw new Error("Date cannot be empty");
     }
     let validateResult = await Joi.validate(date, Joi.date());
-    if (validateResult.error.isJoi) {
+    if (validateResult.error && validateResult.error.isJoi) {
       throw validateResult.error.details[0];
     }
     let orders = await Orders.getByDate(date);

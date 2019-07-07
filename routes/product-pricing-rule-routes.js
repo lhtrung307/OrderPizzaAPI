@@ -1,5 +1,7 @@
 const ProductPricingRuleControllers = require("../controllers/product-pricing-rule-controllers");
 const Joi = require("@hapi/joi");
+const validateHandle = require("./validate-handle");
+
 const Router = {
   name: "category-router",
   version: "1.0.0",
@@ -9,7 +11,10 @@ const Router = {
       path: "/product-pricing-rules",
       options: {
         description: "Get list of product pricing rules",
-        tags: ["api", "order-pizza", "product-pricing-rules"]
+        tags: ["api", "product-pricing-rules"],
+        response: validateHandle.responseOptions(
+          validateHandle.productPricingRuleResponseSchema
+        )
       },
       handler: ProductPricingRuleControllers.list
     });
@@ -19,18 +24,13 @@ const Router = {
       path: "/product-pricing-rules",
       options: {
         description: "Create product pricing rules",
-        tags: ["api", "order-pizza", "product-pricing-rules"],
+        tags: ["api", "product-pricing-rules"],
         validate: {
-          payload: Joi.object().keys({
-            fromDate: Joi.date().required(),
-            toDate: Joi.date().required(),
-            productIDs: Joi.array()
-              .items(Joi.string())
-              .required(),
-            discountType: Joi.string().required(),
-            discount: Joi.number().required()
-          })
-        }
+          payload: validateHandle.productPricingRuleRequestSchema
+        },
+        response: validateHandle.responseOptions(
+          validateHandle.productPricingRuleResponseSchema
+        )
       },
       handler: ProductPricingRuleControllers.create
     });
@@ -40,24 +40,15 @@ const Router = {
       path: "/product-pricing-rules/{id}",
       options: {
         description: "Update product pricing rules by id",
-        tags: ["api", "order-pizza", "product-pricing-rules"],
+        tags: ["api", "product-pricing-rules"],
         validate: {
           params: { id: Joi.string().required() },
-          payload: Joi.object().keys({
-            fromDate: Joi.date().optional(),
-            toDate: Joi.date().optional(),
-            productIDs: Joi.array()
-              .items(Joi.string())
-              .optional(),
-            discountType: Joi.string().optional(),
-            discount: Joi.number().optional()
-          }),
-          failAction: (request, h, error) => {
-            return error.isJoi
-              ? h.response(error.details[0]).takeover()
-              : h.response(error).takeover();
-          }
-        }
+          payload: validateHandle.productPricingRuleRequestSchema,
+          failAction: validateHandle.handleValidateError
+        },
+        response: validateHandle.responseOptions(
+          validateHandle.productPricingRuleResponseSchema
+        )
       },
       handler: ProductPricingRuleControllers.update
     });
@@ -67,17 +58,16 @@ const Router = {
       path: "/product-pricing-rules/{id}",
       options: {
         description: "Delete product pricing rules by id",
-        tags: ["api", "order-pizza", "product-pricing-rules"],
+        tags: ["api", "product-pricing-rules"],
         validate: {
           params: {
             id: Joi.string().required()
           },
-          failAction: (request, h, error) => {
-            return error.isJoi
-              ? h.response(error.details[0]).takeover()
-              : h.response(error).takeover();
-          }
-        }
+          failAction: validateHandle.handleValidateError
+        },
+        response: validateHandle.responseOptions(
+          validateHandle.productPricingRuleResponseSchema
+        )
       },
       handler: ProductPricingRuleControllers.delete
     });

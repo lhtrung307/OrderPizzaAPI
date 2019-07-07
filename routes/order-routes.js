@@ -1,5 +1,6 @@
 const OrderControllers = require("../controllers/order-controllers");
 const Joi = require("@hapi/joi");
+const validateHandle = require("./validate-handle");
 
 const Router = {
   name: "order-router",
@@ -10,47 +11,18 @@ const Router = {
       path: "/orders",
       options: {
         description: "Create new order",
-        tags: ["api", "order-pizza", "order"],
+        tags: ["api", "order"],
         validate: {
-          payload: Joi.object().keys({
-            customerID: Joi.string().required(),
-            orderDetails: Joi.array()
-              .required()
-              .items(
-                Joi.object().keys({
-                  productID: Joi.string().required(),
-                  quantity: Joi.number()
-                    .min(1)
-                    .integer()
-                    .required(),
-                  variants: Joi.array().items(
-                    Joi.object().keys({
-                      key: Joi.string().allow("size"),
-                      value: Joi.string().allow("S", "M", "L")
-                    })
-                  ),
-                  price: Joi.number().required(),
-                  type: Joi.string()
-                    .required()
-                    .allow("pizza", "topping")
-                })
-              )
-          }),
-          failAction: (request, h, error) => {
-            return error.isJoi
-              ? h.response(error.details[0]).takeover()
-              : h.response(error).takeover();
-          }
+          payload: validateHandle.orderRequestSchema,
+          failAction: validateHandle.handleValidateError
         },
-        response: {
-          status: {
-            200: Joi.object()
-              .keys({
-                message: Joi.string()
-              })
-              .label("Result")
-          }
-        }
+        response: validateHandle.responseOptions(
+          Joi.object()
+            .keys({
+              message: Joi.string()
+            })
+            .label("Result")
+        )
       },
       handler: OrderControllers.create
     });
@@ -60,15 +32,19 @@ const Router = {
       path: "/order-detail-report/{date}",
       options: {
         description: "Get order report from date",
-        tags: ["api", "order-pizza", "order-detail"],
+        tags: ["api", "order-detail"],
         validate: {
           params: { date: Joi.date().required() },
-          failAction: (request, h, error) => {
-            return error.isJoi
-              ? h.response(error.details[0]).takeover()
-              : h.response(error).takeover();
-          }
-        }
+          failAction: validateHandle.handleValidateError
+        },
+        response: validateHandle.responseOptions(
+          Joi.array().items(
+            Joi.object().keys({
+              _id: Joi.object(),
+              quantity: Joi.number()
+            })
+          )
+        )
       },
       handler: OrderControllers.getByDate
     });
@@ -78,19 +54,18 @@ const Router = {
       path: "/orders/customer/{customerID}",
       options: {
         description: "Get all orders of customer",
-        tags: ["api", "order-pizza", "order"],
+        tags: ["api", "order"],
         validate: {
           params: {
             customerID: Joi.string()
               .length(24)
               .required()
           },
-          failAction: (request, h, error) => {
-            return error.isJoi
-              ? h.response(error.details[0]).takeover()
-              : h.response(error).takeover();
-          }
-        }
+          failAction: validateHandle.handleValidateError
+        },
+        response: validateHandle.responseOptions(
+          validateHandle.orderResponseSchema
+        )
       },
       handler: OrderControllers.orderHistory
     });

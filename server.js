@@ -42,7 +42,8 @@ exports.start = async () => {
         info: {
           title: "Pizza Order Endpoints",
           version: Pack.version
-        }
+        },
+        grouping: "tags"
       }
     }
   ]);

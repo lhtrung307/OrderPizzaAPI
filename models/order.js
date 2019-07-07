@@ -66,7 +66,8 @@ const getAllOrdersByCustomerID = (customerID) =>
         foreignField: "orderID",
         as: "orderDetails"
       }
-    }
+    },
+    { $project: { "orderDetails.orderID": 0 } }
   ])
     .then((result) => result)
     .catch((error) => {

@@ -15,6 +15,7 @@ module.exports.signUp = async (request, h) => {
     return h.response(error.message);
   }
   if (createdCustomer) {
+    createdCustomer.password = undefined;
     return h.response(createdCustomer).code(200);
   } else {
     return h.response("Cannot create customer");

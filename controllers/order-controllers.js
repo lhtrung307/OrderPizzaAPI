@@ -31,7 +31,7 @@ module.exports.orderHistory = async (request, h) => {
     let orders = await OrderServices.getOrderOfCustomer(customerID);
     if (orders) {
       if (orders.error) {
-        return h.response(orders.error);
+        return Boom.badImplementation(orders.error);
       } else {
         return h.response(orders);
       }
