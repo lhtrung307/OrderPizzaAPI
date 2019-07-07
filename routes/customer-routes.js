@@ -34,7 +34,25 @@ const Router = {
           }
         },
         description: "Create new customer account",
-        tags: ["api", "order-pizza", "customers"]
+        tags: ["api", "order-pizza", "customers"],
+        response: {
+          status: {
+            200: Joi.object()
+              .keys({
+                email: Joi.string()
+                  .email()
+                  .required(),
+                phone: Joi.string()
+                  .regex(/^[0-9]+$/, "phone numbers")
+                  .required(),
+                name: Joi.string().required(),
+                password: Joi.string().required(),
+                dob: Joi.date().required(),
+                _id: Joi.string().required()
+              })
+              .label("Result")
+          }
+        }
       },
       handler: CustomerControllers.signUp
     });
@@ -57,7 +75,24 @@ const Router = {
           }
         },
         description: "Login",
-        tags: ["api", "order-pizza", "customers"]
+        tags: ["api", "order-pizza", "customers"],
+        response: {
+          status: {
+            200: Joi.object()
+              .keys({
+                email: Joi.string()
+                  .email()
+                  .required(),
+                phone: Joi.string()
+                  .regex(/^[0-9]+$/, "phone numbers")
+                  .required(),
+                name: Joi.string().required(),
+                dob: Joi.date().required(),
+                _id: Joi.string().required()
+              })
+              .label("Result")
+          }
+        }
       },
       handler: CustomerControllers.login
     });

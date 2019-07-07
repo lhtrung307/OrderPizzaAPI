@@ -56,9 +56,27 @@ const getByDate = (date) =>
       return { error };
     });
 
+const getAllOrdersByCustomerID = (customerID) =>
+  OrderModel.aggregate([
+    { $match: { customerID: Mongooose.Types.ObjectId(customerID) } },
+    {
+      $lookup: {
+        from: "order-details",
+        localField: "_id",
+        foreignField: "orderID",
+        as: "orderDetails"
+      }
+    }
+  ])
+    .then((result) => result)
+    .catch((error) => {
+      return { error };
+    });
+
 module.exports = {
   OrderSchema,
   OrderModel,
   save,
-  getByDate
+  getByDate,
+  getAllOrdersByCustomerID
 };

@@ -136,8 +136,37 @@ class OrderServices {
   }
 
   async getOrderByDate(date) {
-    let result = await Orders.getByDate(date);
-    return result;
+    if (!date) {
+      throw new Error("Date cannot be empty");
+    }
+    let validateResult = await Joi.validate(date, Joi.date());
+    if (validateResult.error.isJoi) {
+      throw validateResult.error.details[0];
+    }
+    let orders = await Orders.getByDate(date);
+    if (orders && orders.error) {
+      throw orders.error;
+    }
+    return orders;
+  }
+
+  async getOrderOfCustomer(customerID) {
+    if (!customerID) {
+      throw new Error("CustomerID cannot be empty");
+    }
+    let validateResult = await Joi.validate(
+      customerID,
+      Joi.string().length(24)
+    );
+    console.log(validateResult);
+    if (validateResult.error && validateResult.error.isJoi) {
+      throw validateResult.error.details[0];
+    }
+    let orders = await Orders.getAllOrdersByCustomerID(customerID);
+    if (orders && orders.error) {
+      throw orders.error;
+    }
+    return orders;
   }
 
   orderValidate() {

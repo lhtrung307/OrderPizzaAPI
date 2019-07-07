@@ -25,12 +25,14 @@ const Router = {
                     .required(),
                   variants: Joi.array().items(
                     Joi.object().keys({
-                      key: Joi.string(),
-                      value: Joi.string()
+                      key: Joi.string().allow("size"),
+                      value: Joi.string().allow("S", "M", "L")
                     })
                   ),
                   price: Joi.number().required(),
-                  type: Joi.string().required()
+                  type: Joi.string()
+                    .required()
+                    .allow("pizza", "topping")
                 })
               )
           }),
@@ -38,6 +40,15 @@ const Router = {
             return error.isJoi
               ? h.response(error.details[0]).takeover()
               : h.response(error).takeover();
+          }
+        },
+        response: {
+          status: {
+            200: Joi.object()
+              .keys({
+                message: Joi.string()
+              })
+              .label("Result")
           }
         }
       },
@@ -60,6 +71,28 @@ const Router = {
         }
       },
       handler: OrderControllers.getByDate
+    });
+
+    server.route({
+      method: "GET",
+      path: "/orders/customer/{customerID}",
+      options: {
+        description: "Get all orders of customer",
+        tags: ["api", "order-pizza", "order"],
+        validate: {
+          params: {
+            customerID: Joi.string()
+              .length(24)
+              .required()
+          },
+          failAction: (request, h, error) => {
+            return error.isJoi
+              ? h.response(error.details[0]).takeover()
+              : h.response(error).takeover();
+          }
+        }
+      },
+      handler: OrderControllers.orderHistory
     });
   }
 };
