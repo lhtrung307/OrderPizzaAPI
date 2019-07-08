@@ -36,7 +36,7 @@ const Router = {
         },
         description: "Create new customer account",
         tags: ["api", "customer"],
-        response: validateHandle.responseOptions(validateHandle.customerSchema)
+        response: validateHandle.responseOptions(validateHandle.signupSchema)
       },
       handler: CustomerControllers.signUp
     });
@@ -60,7 +60,16 @@ const Router = {
         },
         description: "Login",
         tags: ["api", "customer"],
-        response: validateHandle.responseOptions(validateHandle.customerSchema)
+        response: validateHandle.responseOptions(
+          validateHandle.customerSchema,
+          {
+            401: {
+              statusCode: 401,
+              error: "Unauthorized",
+              message: "Email or password is wrong"
+            }
+          }
+        )
       },
       handler: CustomerControllers.login
     });

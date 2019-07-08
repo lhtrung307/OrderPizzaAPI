@@ -34,7 +34,12 @@ const Router = {
         description: "Get order report from date",
         tags: ["api", "order-detail"],
         validate: {
-          params: { date: Joi.date().required() },
+          params: {
+            date: Joi.string()
+              .isoDate()
+              .required()
+              .options({ allowUnknown: true })
+          },
           failAction: validateHandle.handleValidateError
         },
         response: validateHandle.responseOptions(

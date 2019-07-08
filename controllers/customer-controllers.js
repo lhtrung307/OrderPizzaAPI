@@ -1,4 +1,5 @@
 const CustomerServices = require("../services/customer-services");
+const Boom = require("@hapi/boom");
 
 module.exports.signUp = async (request, h) => {
   let customer = {
@@ -15,6 +16,7 @@ module.exports.signUp = async (request, h) => {
     return h.response(error.message);
   }
   if (createdCustomer) {
+    console.log(createdCustomer);
     createdCustomer.password = undefined;
     return h.response(createdCustomer).code(200);
   } else {
@@ -31,11 +33,11 @@ module.exports.login = async (request, h) => {
   try {
     customer = await CustomerServices.authCustomer(loginData);
   } catch (error) {
-    return h.response(error.message);
+    console.log(error);
+    return Boom.unauthorized("Email or password is wrong");
   }
   if (customer) {
     customer.password = undefined;
-    console.log(customer);
     return h.response(customer);
   } else {
     return h.response("Login failed");

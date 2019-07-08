@@ -17,10 +17,11 @@ class CustomerServices {
       customer.password = encryptedPass;
     }
     let savedCustomer = await Customer.save(customer);
+    console.log(savedCustomer);
     if (savedCustomer.error) {
       throw savedCustomer.error;
     }
-    return customer;
+    return savedCustomer;
   }
 
   async authCustomer(customer) {

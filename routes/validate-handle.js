@@ -17,6 +17,21 @@ class ValidateHandle {
       .options({ allowUnknown: true })
       .label("customer");
 
+    this.signupSchema = Joi.object()
+      .keys({
+        email: Joi.string()
+          .email()
+          .required(),
+        phone: Joi.string()
+          .regex(/^[0-9]+$/, "phone numbers")
+          .required(),
+        name: Joi.string().required(),
+        dob: Joi.date().required(),
+        _id: Joi.object().required()
+      })
+      .options({ allowUnknown: true })
+      .label("customer");
+
     this.orderRequestSchema = Joi.object().keys({
       customerID: Joi.string().required(),
       orderDetails: Joi.array()
@@ -87,7 +102,7 @@ class ValidateHandle {
     });
   }
 
-  responseOptions(schema) {
+  responseOptions(schema, options) {
     return {
       status: {
         200: schema,
@@ -95,7 +110,8 @@ class ValidateHandle {
           statusCode: Joi.number().example(500),
           error: Joi.string(),
           message: Joi.string()
-        })
+        }),
+        ...options
       },
       failAction: this.handleValidateError
     };

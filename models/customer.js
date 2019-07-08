@@ -7,12 +7,10 @@ const CustomerSchema = new Schema(
   {
     email: {
       type: String,
-      unique: true,
       required: "Customer must have email address."
     },
     phone: {
       type: String,
-      unique: true,
       required: "Customer must have phone number"
     },
     // token: {
