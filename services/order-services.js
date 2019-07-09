@@ -163,6 +163,7 @@ class OrderServices {
       throw validateResult.error.details[0];
     }
     let orders = await Orders.getAllOrdersByCustomerID(customerID);
+    console.log(orders);
     if (orders && orders.error) {
       throw orders.error;
     }

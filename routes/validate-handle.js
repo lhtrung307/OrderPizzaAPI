@@ -57,24 +57,25 @@ class ValidateHandle {
         )
     });
 
-    this.orderResponseSchema = Joi.object()
-      .keys({
-        _id: Joi.object(),
-        date: Joi.date(),
-        customerID: Joi.string(),
-        total: Joi.number(),
+    this.orderResponseSchema = Joi.array()
+      .items({
+        _id: Joi.object().optional(),
+        date: Joi.date().optional(),
+        customerID: Joi.object().optional(),
+        total: Joi.number().optional(),
         orderDetails: Joi.array().items(
           Joi.object().keys({
-            _id: Joi.object(),
-            productID: Joi.string(),
-            quantity: Joi.number(),
-            type: Joi.string(),
-            price: Joi.number(),
-            discountAmount: Joi.number(),
-            total: Joi.number()
+            _id: Joi.object().optional(),
+            productID: Joi.object().optional(),
+            quantity: Joi.number().optional(),
+            type: Joi.string().optional(),
+            price: Joi.number().optional(),
+            discountAmount: Joi.number().optional(),
+            total: Joi.number().optional()
           })
         )
       })
+      .options({ allowUnknown: true })
       .label("Result");
 
     this.productPricingRuleResponseSchema = Joi.array().items(
