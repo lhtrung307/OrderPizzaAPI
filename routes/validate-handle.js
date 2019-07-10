@@ -91,6 +91,17 @@ class ValidateHandle {
         .options({ allowUnknown: true })
         .label("product-pricing-rule")
     );
+    this.productPricingRuleObjectResponseSchema = Joi.object()
+      .keys({
+        productIDs: Joi.array().items(Joi.object()),
+        _id: Joi.object(),
+        fromDate: Joi.date(),
+        toDate: Joi.date(),
+        discountType: Joi.string(),
+        discount: Joi.number()
+      })
+      .options({ allowUnknown: true })
+      .label("product-pricing-rule");
 
     this.productPricingRuleRequestSchema = Joi.object().keys({
       fromDate: Joi.date().optional(),

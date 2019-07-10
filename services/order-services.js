@@ -1,22 +1,11 @@
 const Orders = require("../models/order");
 const OrderDetails = require("../models/order-detail");
 const ProductPricingRules = require("../models/product-pricing-rule");
-const axios = require("axios");
+
 const Joi = require("@hapi/joi");
-const CircuitBreaker = require("opossum");
 
 class OrderServices {
-  constructor() {
-    this.options = {
-      timeout: 5000, // If our function takes longer than 3 seconds, trigger a failure
-      errorThresholdPercentage: 50, // When 50% of requests fail, trip the circuit
-      resetTimeout: 30000
-    };
-    this.links = [];
-    this.links.listPizzas = "https://pizza-products.herokuapp.com/pizzas";
-  }
-
-  async createOrder(order) {
+  async createOrder(order, products) {
     if (!order) {
       throw new Error("Order cannot be empty");
     }
@@ -26,27 +15,6 @@ class OrderServices {
     }
     let orderDetails = order.orderDetails;
     console.log(orderDetails);
-    let productInfos = orderDetails.map((orderDetail) => ({
-      productID: orderDetail.productID,
-      variants: orderDetail.variants
-    }));
-
-    const breaker = CircuitBreaker(
-      () => axios.post(this.links.listPizzas, productInfos),
-      this.options
-    );
-    breaker.fallback(() => {
-      throw new Error("Product service is out of service right now");
-    });
-    breaker.on("timeout", () => {
-      throw new Error(
-        `TIMEOUT: Product service is taking too long to respond.`
-      );
-    });
-    let requestResult = await breaker.fire();
-    console.log(requestResult.data);
-    // bắt lỗi khi nhận dữ liệu từ axios
-    let products = requestResult.data;
 
     for (let i = 0; i < orderDetails.length; i++) {
       for (let j = 0; j < products.length; j++) {

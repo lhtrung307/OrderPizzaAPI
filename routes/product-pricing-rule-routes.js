@@ -29,7 +29,7 @@ const Router = {
           payload: validateHandle.productPricingRuleRequestSchema
         },
         response: validateHandle.responseOptions(
-          validateHandle.productPricingRuleResponseSchema
+          validateHandle.productPricingRuleObjectResponseSchema
         )
       },
       handler: ProductPricingRuleControllers.create
@@ -47,7 +47,7 @@ const Router = {
           failAction: validateHandle.handleValidateError
         },
         response: validateHandle.responseOptions(
-          validateHandle.productPricingRuleResponseSchema
+          validateHandle.productPricingRuleObjectResponseSchema
         )
       },
       handler: ProductPricingRuleControllers.update
@@ -66,7 +66,7 @@ const Router = {
           failAction: validateHandle.handleValidateError
         },
         response: validateHandle.responseOptions(
-          validateHandle.productPricingRuleResponseSchema
+          validateHandle.productPricingRuleObjectResponseSchema
         )
       },
       handler: ProductPricingRuleControllers.delete
