@@ -39,7 +39,7 @@ producer.on("disconnected", function(arg) {
 
 producer.on("event.error", function(err) {
   console.error(err);
-  process.exit(1);
+  // process.exit(1);
 });
 producer.on("event.log", function(log) {
   // console.log(log);
@@ -96,7 +96,7 @@ module.exports.update = async (request, h) => {
   let pricingRuleID = request.params.id;
   let pricingRuleData = request.payload;
   try {
-    let updatedPricingRule = ProductPricingRuleServices.updateProductPricingRule(
+    let updatedPricingRule = await ProductPricingRuleServices.updateProductPricingRule(
       pricingRuleID,
       pricingRuleData
     );
